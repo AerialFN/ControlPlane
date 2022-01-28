@@ -8,4 +8,5 @@ COPY . .
 RUN ["npm", "run", "build"]
 
 ENV PORT $PORT
+ENV PUBLIC_KEY $PUBLIC_KEY
 ENTRYPOINT ["node", "dist"]

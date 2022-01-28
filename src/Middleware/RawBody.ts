@@ -1,4 +1,4 @@
-// ACP Entry Point
+// Request to Raw Body Middleware
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,26 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import Express from "express";
-import { RawBody, Ed25519, JSONBody } from "./Middleware";
+import { Request, Response } from "express";
 
-const app = Express();
-app.use(RawBody, Ed25519, JSONBody);
+export const RawBody = (req: Request, res: Response, next: Function) => {
+  var data = "";
+  req.setEncoding("utf8");
 
-app.post("/", async (request, response) => {
-  if (request.body.type === 1) {
-    // discord ping making sure server is alive
-    return response.json({ type: 1 }).send();
-  } else if (request.body.type === 2) {
-    // slash command
-    return response
-      .json({ type: 4, data: { content: "Hello, world!" } })
-      .send();
-  }
-});
-
-app.get("/", (req, res) => {
-  return res.status(200).send("Hello, world!");
-});
-
-app.listen(process.env.PORT || 5000);
+  req.on("data", (chunk) => (data += chunk));
+  req.on("end", () => {
+    req.body = data;
+    next();
+  });
+};

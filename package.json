@@ -3,7 +3,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
