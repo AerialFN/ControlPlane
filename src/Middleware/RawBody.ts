@@ -16,7 +16,7 @@
 
 import { Request, Response } from "express";
 
-export const RawBody = (req: Request, res: Response, next: Function) => {
+export const RawBody = (req: Request, res: Response, next: () => never) => {
   var data = "";
   req.setEncoding("utf8");
 

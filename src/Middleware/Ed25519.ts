@@ -19,7 +19,7 @@ import NaCl from "tweetnacl";
 
 const PUBLIC_KEY = process.env.PUBLIC_KEY || process.exit(1);
 
-export const Ed25519 = (req: Request, res: Response, next: Function) => {
+export const Ed25519 = (req: Request, res: Response, next: () => never) => {
   const signature = req.get("X-Signature-Ed25519");
   const timestamp = req.get("X-Signature-Timestamp");
   const body = req.body;
@@ -30,7 +30,7 @@ export const Ed25519 = (req: Request, res: Response, next: Function) => {
 
   const isVerified = NaCl.sign.detached.verify(
     Buffer.from(timestamp + body),
-    Buffer.from(signature!, "hex"),
+    Buffer.from(signature, "hex"),
     Buffer.from(PUBLIC_KEY, "hex")
   );
 
