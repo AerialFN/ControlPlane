@@ -16,7 +16,8 @@
 
 import { Request, Response } from "express";
 
-export const JSONBody = (req: Request, res: Response, next: () => never) => {
+// eslint-disable-next-line -- complains about "next: Function"
+export const JSONBody = (req: Request, res: Response, next: Function) => {
   req.body = JSON.parse(req.body);
   next();
 };

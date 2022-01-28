@@ -16,8 +16,9 @@
 
 import { Request, Response } from "express";
 
-export const RawBody = (req: Request, res: Response, next: () => never) => {
-  var data = "";
+// eslint-disable-next-line -- complains about "next: Function"
+export const RawBody = (req: Request, _: Response, next: Function) => {
+  let data = "";
   req.setEncoding("utf8");
 
   req.on("data", (chunk) => (data += chunk));

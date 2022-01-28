@@ -12,6 +12,9 @@ jobs:
       - name: "Set Up NodeJS"
         uses: "actions/setup-node@v2"
 
+      - name: "Install Dependencies"
+        run: "npm ci"
+
       - name: "Lint Code"
         run: "npx eslint -f .github/workflows/formatter.js src/**/*.ts"
 

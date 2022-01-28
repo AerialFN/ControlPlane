@@ -19,7 +19,8 @@ import NaCl from "tweetnacl";
 
 const PUBLIC_KEY = process.env.PUBLIC_KEY || process.exit(1);
 
-export const Ed25519 = (req: Request, res: Response, next: () => never) => {
+// eslint-disable-next-line -- complains about "next: Function"
+export const Ed25519 = (req: Request, res: Response, next: Function) => {
   const signature = req.get("X-Signature-Ed25519");
   const timestamp = req.get("X-Signature-Timestamp");
   const body = req.body;
