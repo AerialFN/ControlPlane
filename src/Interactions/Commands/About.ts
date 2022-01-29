@@ -34,7 +34,7 @@ const getUptime = () => {
     prettyUptime += `${Math.floor(uptime / 60)} minutes, `;
     uptime = uptime % 60;
   }
-  prettyUptime += `${uptime} seconds`;
+  prettyUptime += `${Math.floor(uptime)} seconds`;
   return prettyUptime;
 };
 
