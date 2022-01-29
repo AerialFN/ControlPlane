@@ -24,7 +24,7 @@ app.use(RawBody, Ed25519, JSONBody);
 
 app.post("/", async (request, response) => {
   const interaction: Interaction = request.body;
-  return response.json(InteractionManager.execute(interaction)).send();
+  return response.json(await InteractionManager.execute(interaction)).send();
 });
 
 app.listen(process.env.PORT || 5000);
