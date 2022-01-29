@@ -1,4 +1,4 @@
-// ACP Entry Point
+// Interaction Manager
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,24 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import Express from "express";
-import { APIInteraction as Interaction } from "discord-api-types/payloads/v9";
-import InteractionManager from "./Interactions";
-import { RawBody, Ed25519, JSONBody } from "./Middleware";
+import {
+  APIInteraction as Interaction,
+  APIInteractionResponse as InteractionResponse,
+} from "discord-api-types/v9";
+import SlashCommandManager from "./Commands";
 
-const app = Express();
-app.use(RawBody, Ed25519, JSONBody);
+class InteractionManager {
+  private slash = SlashCommandManager;
 
-app.post("/", async (request, response) => {
-  const interaction: Interaction = request.body;
-  return response.json(InteractionManager.execute(interaction)).send();
-});
+  async execute(interaction: Interaction): Promise<InteractionResponse> {
+    if (interaction.type === 1) {
+      return { type: 1 };
+    } else if (interaction.type === 2) {
+      return await this.slash.execute(interaction);
+    } else {
+      return { type: 4, data: { content: "Unknown interaction.", flags: 64 } };
+    }
+  }
+}
 
-app.listen(process.env.PORT || 5000);
+export default new InteractionManager();
