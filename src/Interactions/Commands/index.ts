@@ -18,6 +18,7 @@ import {
   APIApplicationCommandInteraction as Interaction,
   APIInteractionResponse as InteractionResponse,
 } from "discord-api-types/v9";
+import { readdir } from "fs/promises";
 
 type SlashCommandHandler = (_: Interaction) => Promise<InteractionResponse>;
 
@@ -40,3 +41,7 @@ class SlashCommandManager {
 }
 
 export default new SlashCommandManager();
+
+readdir(__dirname).then((files) =>
+  files.forEach((file) => require(`./${file}`))
+);

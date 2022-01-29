@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist"
   },
   "dependencies": {
     "axios": "^0.25.0",

@@ -21,6 +21,8 @@ const PUBLIC_KEY = process.env.PUBLIC_KEY || process.exit(1);
 
 // eslint-disable-next-line -- complains about "next: Function"
 export const Ed25519 = (req: Request, res: Response, next: Function) => {
+  if (PUBLIC_KEY === "DISABLE_VERIFICATION") return next(); // local development
+
   const signature = req.get("X-Signature-Ed25519");
   const timestamp = req.get("X-Signature-Timestamp");
   const body = req.body;
