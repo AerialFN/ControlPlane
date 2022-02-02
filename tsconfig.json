@@ -2,6 +2,8 @@
   "extends": "@tsconfig/recommended/tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true
   }
 }
