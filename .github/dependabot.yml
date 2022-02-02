@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    assignees: ["andre4ik3"]
+    directory: "/"
+    commit-message:
+      prefix: "⬆️ "
+    labels: ["⬆️ Dependencies"]
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Europe/Moscow"
