@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import SlashCommandManager from ".";
+import Slash from ".";
 import os from "os";
 import { Emoji } from "../../Utils";
-import { APIEmbed } from "discord-api-types/v9";
+import { APIEmbed, APIUser } from "discord-api-types/v9";
+import { User } from "../../Database";
 
 const getUptime = () => {
   let uptime = os.uptime();
@@ -38,7 +39,11 @@ const getUptime = () => {
   return prettyUptime;
 };
 
-SlashCommandManager.register("about", async (interaction) => {
+Slash.register("about", true, async (interaction, respond, _) => {
+  const rawUser = (interaction.user || interaction.member?.user) as APIUser;
+  const user = new User(rawUser);
+  await user.update();
+
   const embed: APIEmbed = {
     color: 0x852087,
     title: "About Aerial",
@@ -54,5 +59,5 @@ SlashCommandManager.register("about", async (interaction) => {
       text: `${getUptime()} • Made with </> by andre4ik3`,
     },
   };
-  return { type: 4, data: { embeds: [embed] } };
+  respond({ embeds: [embed] });
 });

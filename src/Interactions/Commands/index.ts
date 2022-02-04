@@ -14,28 +14,41 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import { createFollowUp, editResponse } from "../../API";
 import {
   APIApplicationCommandInteraction as Interaction,
-  APIInteractionResponse as InteractionResponse,
+  APIInteractionResponse as Response,
+  APIMessage as Message,
 } from "discord-api-types/v9";
 import { readdir } from "fs/promises";
 
-type SlashCommandHandler = (_: Interaction) => Promise<InteractionResponse>;
+export type EditMessage = (_: Partial<Message>) => Promise<Message | undefined>;
+export type FollowUp = (_: Message) => Promise<Message | undefined>;
+
+type Handler = (i: Interaction, e: EditMessage, c: FollowUp) => void;
+type SlashCommandMapping = { ephemeral: boolean; fn: Handler };
 
 class SlashCommandManager {
-  private registeredCommands: Map<string, SlashCommandHandler>;
+  private registeredCommands: Map<string, SlashCommandMapping> = new Map();
 
-  constructor() {
-    this.registeredCommands = new Map();
+  register(name: string, ephemeral: boolean, fn: Handler) {
+    this.registeredCommands.set(name, { fn, ephemeral });
   }
 
-  register(name: string, fn: SlashCommandHandler) {
-    this.registeredCommands.set(name, fn);
+  private getResponse(int: Interaction) {
+    return (msg: Partial<Message>) => editResponse(msg, int.token);
   }
 
-  async execute(interaction: Interaction): Promise<InteractionResponse> {
-    const fn = this.registeredCommands.get(interaction.data.name);
-    if (fn) return await fn(interaction);
+  private getFollowUp(int: Interaction) {
+    return (msg: Message) => createFollowUp(msg, int.token);
+  }
+
+  async execute(int: Interaction): Promise<Response> {
+    const registered = this.registeredCommands.get(int.data.name);
+    if (registered) {
+      registered.fn(int, this.getResponse(int), this.getFollowUp(int));
+      return { type: 5, data: { flags: registered.ephemeral ? 64 : 0 } };
+    }
     return { type: 4, data: { content: "Unknown command.", flags: 64 } };
   }
 }

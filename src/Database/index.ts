@@ -1,4 +1,4 @@
-// Raw to JSON Body Middleware
+// Firebase Initialization
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Request, Response, NextFunction } from "express";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 
-export const JSONBody = (req: Request, res: Response, next: NextFunction) => {
-  req.body = JSON.parse(req.body);
-  next();
-};
+const app = initializeApp();
+const firestore = getFirestore(app);
+
+export default firestore;
+export * from "./User";

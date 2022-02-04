@@ -1,4 +1,4 @@
-// Raw to JSON Body Middleware
+// Miscellaneous Helpers
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,4 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Request, Response, NextFunction } from "express";
-
-export const JSONBody = (req: Request, res: Response, next: NextFunction) => {
-  req.body = JSON.parse(req.body);
-  next();
-};
+export const getEnv = (name: string) => process.env[name] || process.exit(1);

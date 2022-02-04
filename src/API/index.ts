@@ -1,4 +1,4 @@
-// Raw to JSON Body Middleware
+// Discord API Entrypoint
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Request, Response, NextFunction } from "express";
+import Axios from "axios";
 
-export const JSONBody = (req: Request, res: Response, next: NextFunction) => {
-  req.body = JSON.parse(req.body);
-  next();
-};
+const instance = Axios.create({
+  baseURL: "https://discord.com/api/v9",
+  headers: { "User-Agent": "Aerial/1.0" },
+});
+
+export default instance;
+export * from "./Interactions";

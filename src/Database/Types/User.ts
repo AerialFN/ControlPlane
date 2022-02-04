@@ -1,4 +1,4 @@
-// Raw to JSON Body Middleware
+// Firebase User Type
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Request, Response, NextFunction } from "express";
+import { Timestamp } from "firebase-admin/firestore";
 
-export const JSONBody = (req: Request, res: Response, next: NextFunction) => {
-  req.body = JSON.parse(req.body);
-  next();
+export enum UserType {
+  "NORMAL" = 0,
+  "ORIGINAL_MEMBER" = 1,
+  "DEVELOPER" = 2,
+  "BOOSTER" = 3,
+}
+
+export type User = {
+  id: string;
+  locale: string;
+  type: UserType;
+  typeExpiresAt?: Timestamp;
 };

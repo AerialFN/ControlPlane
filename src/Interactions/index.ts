@@ -16,14 +16,14 @@
 
 import {
   APIInteraction as Interaction,
-  APIInteractionResponse as InteractionResponse,
+  APIInteractionResponse as Response,
 } from "discord-api-types/v9";
 import SlashCommandManager from "./Commands";
 
 class InteractionManager {
   private slash = SlashCommandManager;
 
-  async execute(interaction: Interaction): Promise<InteractionResponse> {
+  async execute(interaction: Interaction): Promise<Response> {
     if (interaction.type === 1) {
       return { type: 1 };
     } else if (interaction.type === 2) {

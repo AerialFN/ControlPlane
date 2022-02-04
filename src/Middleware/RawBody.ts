@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
-// eslint-disable-next-line -- complains about "next: Function"
-export const RawBody = (req: Request, _: Response, next: Function) => {
+export const RawBody = (req: Request, _: Response, next: NextFunction) => {
   let data = "";
   req.setEncoding("utf8");
 

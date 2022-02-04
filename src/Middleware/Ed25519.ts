@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import NaCl from "tweetnacl";
+import { getEnv } from "../Utils";
 
-const PUBLIC_KEY = process.env.PUBLIC_KEY || process.exit(1);
+const PUBLIC_KEY = getEnv("PUBLIC_KEY");
 
-// eslint-disable-next-line -- complains about "next: Function"
-export const Ed25519 = (req: Request, res: Response, next: Function) => {
+export const Ed25519 = (req: Request, res: Response, next: NextFunction) => {
   if (PUBLIC_KEY === "DISABLE_VERIFICATION") return next(); // local development
 
   const signature = req.get("X-Signature-Ed25519");

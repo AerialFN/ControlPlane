@@ -4,16 +4,19 @@
     "start": "node dist"
   },
   "dependencies": {
+    "amqplib": "^0.8.0",
     "axios": "^0.25.0",
     "express": "^4.17.2",
+    "firebase-admin": "^10.0.2",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
+    "@types/amqplib": "^0.8.2",
     "@types/express": "^4.17.13",
-    "@types/node": "^17.0.14",
-    "@typescript-eslint/eslint-plugin": "^5.10.2",
-    "@typescript-eslint/parser": "^5.10.2",
+    "@types/node": "^17.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
     "discord-api-types": "^0.26.1",
     "eslint": "^8.7.0",
     "eslint-config-airbnb": "^19.0.4",
