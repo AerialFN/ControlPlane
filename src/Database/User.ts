@@ -22,12 +22,14 @@ import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 export class User {
   private doc: DocumentReference;
   private currentUser: APIUser;
+  private currentLocale: string;
   private snapshot?: DocumentSnapshot;
   public data?: DBUser;
 
-  constructor(discordUser: APIUser) {
+  constructor(discordUser: APIUser, locale: string) {
     this.doc = Firestore.doc(`users/${discordUser.id}`);
     this.currentUser = discordUser;
+    this.currentLocale = locale;
   }
 
   // Ensures the user exists in the database
@@ -36,7 +38,7 @@ export class User {
     if (!snapshot.exists) {
       await this.doc.create({
         id: this.currentUser.id,
-        locale: this.currentUser.locale,
+        locale: this.currentLocale,
         type: 0,
       } as DBUser);
     }
@@ -58,8 +60,8 @@ export class User {
       newUser.typeExpiresAt = undefined;
     }
 
-    // Update locale if it changed
-    if (this.currentUser.locale) newUser.locale = this.currentUser.locale;
+    // Update locale
+    if (this.currentLocale) newUser.locale = this.currentLocale;
 
     // commit
     await this.doc.update(newUser);

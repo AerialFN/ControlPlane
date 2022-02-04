@@ -41,7 +41,8 @@ const getUptime = () => {
 
 Slash.register("about", false, async (interaction, respond, _) => {
   const rawUser = (interaction.user || interaction.member?.user) as APIUser;
-  const user = new User(rawUser);
+  // TODO: discord-api-types doesn't yet have locale
+  const user = new User(rawUser, (interaction as any).locale);
   user.update(); // Background job
 
   const embed: APIEmbed = {
