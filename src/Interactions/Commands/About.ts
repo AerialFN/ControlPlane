@@ -39,7 +39,7 @@ const getUptime = () => {
   return prettyUptime;
 };
 
-Slash.register("about", true, async (interaction, respond, _) => {
+Slash.register("about", false, async (interaction, respond, _) => {
   const rawUser = (interaction.user || interaction.member?.user) as APIUser;
   const user = new User(rawUser);
   await user.update();
