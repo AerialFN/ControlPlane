@@ -34,7 +34,11 @@ export class User {
   private async ensureExists() {
     const snapshot = await this.doc.get();
     if (!snapshot.exists) {
-      await this.doc.create({ type: 0, ...this.currentUser } as DBUser);
+      await this.doc.create({
+        id: this.currentUser.id,
+        locale: this.currentUser.locale,
+        type: 0,
+      } as DBUser);
     }
   }
 

@@ -42,7 +42,7 @@ const getUptime = () => {
 Slash.register("about", false, async (interaction, respond, _) => {
   const rawUser = (interaction.user || interaction.member?.user) as APIUser;
   const user = new User(rawUser);
-  await user.update();
+  user.update(); // Background job
 
   const embed: APIEmbed = {
     color: 0x852087,
