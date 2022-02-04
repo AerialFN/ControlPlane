@@ -54,7 +54,7 @@ jobs:
           project_id: "aerial-fn"
 
       - name: "Authenticate with Container Registry"
-        run: "gcloud auth configure-docker us-docker.pkg.dev"
+        run: "gcloud auth configure-docker"
 
       - name: "Push Container"
         run: "docker push gcr.io/aerial-fn/controlplane:${{ github.sha }}"
