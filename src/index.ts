@@ -15,10 +15,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Express from "express";
-import { APIInteraction as Interaction } from "discord-api-types/payloads/v9";
 import InteractionManager from "./Interactions";
 import { RawBody, Ed25519, JSONBody } from "./Middleware";
+import { APIInteraction as Interaction } from "discord-api-types/payloads/v9";
+import { LoggingManager } from "./Utils";
 
+const log = new LoggingManager();
 const app = Express();
 app.use(RawBody, Ed25519, JSONBody);
 
