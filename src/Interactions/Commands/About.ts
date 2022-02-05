@@ -41,8 +41,7 @@ const getUptime = () => {
 
 Slash.register("about", false, async (interaction, respond, _) => {
   const rawUser = getRawUser(interaction);
-  const dbUser = await getUser(rawUser.id);
-  dbUser.update(interaction); // Background job
+  getUser(rawUser.id).then((user) => user.update(interaction));
 
   const embed: APIEmbed = {
     color: 0x852087,
@@ -59,5 +58,5 @@ Slash.register("about", false, async (interaction, respond, _) => {
       text: `${getUptime()} • Made with </> by andre4ik3`,
     },
   };
-  respond({ embeds: [embed] });
+  await respond({ embeds: [embed] });
 });
