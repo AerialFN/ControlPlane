@@ -16,54 +16,61 @@
 
 import Firestore from ".";
 import { User as DBUser } from "./Types";
-import { APIUser } from "discord-api-types/v9";
+import { APIInteraction } from "discord-api-types/v9";
 import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
+import { getUser as getRawUser } from "../Utils";
 
-export class User {
-  private doc: DocumentReference;
-  private currentUser: APIUser;
-  private currentLocale: string;
-  private snapshot?: DocumentSnapshot;
-  public data?: DBUser;
+export async function getUser(id: string) {
+  const reference = Firestore.doc(`users/${id}`);
+  const snapshot = await reference.get();
+  return new User(reference, snapshot);
+}
 
-  constructor(discordUser: APIUser, locale: string) {
-    this.doc = Firestore.doc(`users/${discordUser.id}`);
-    this.currentUser = discordUser;
-    this.currentLocale = locale;
+class User {
+  private reference: DocumentReference;
+  private snapshot: DocumentSnapshot;
+  private data?: DBUser;
+
+  constructor(reference: DocumentReference, snapshot: DocumentSnapshot) {
+    this.reference = reference;
+    this.snapshot = snapshot;
+    this.data = snapshot.data() as DBUser;
   }
 
-  // Ensures the user exists in the database
-  private async ensureExists() {
-    const snapshot = await this.doc.get();
-    if (!snapshot.exists) {
-      await this.doc.create({
-        id: this.currentUser.id,
-        locale: this.currentLocale,
-        type: 0,
-      } as DBUser);
-    }
-  }
-
-  async fetch() {
-    await this.ensureExists();
-    this.snapshot = await this.doc.get();
+  private async updateSnapshot() {
+    this.snapshot = await this.reference.get();
     this.data = this.snapshot.data() as DBUser;
-    return this.data;
   }
 
-  async update() {
-    const newUser = await this.fetch();
+  async ensureExists(data: DBUser) {
+    if (this.snapshot.exists) return;
+    await this.reference.create(data);
+    await this.updateSnapshot();
+  }
+
+  private async updateReference(data: Partial<DBUser>) {
+    await this.reference.update(data);
+    await this.updateSnapshot();
+  }
+
+  async update(interaction: APIInteraction) {
+    const user = getRawUser(interaction);
+    const locale: string = (interaction as any).locale; // TODO: cleanup when possible
+    await this.ensureExists({ type: 0, id: user.id, locale });
+
+    const oldData = this.data as DBUser;
+    const newData: Partial<DBUser> = {};
 
     // Update type if it expired
-    if (Date.now() > (newUser.typeExpiresAt?.toMillis() || Date.now() + 1)) {
-      newUser.type = 0;
-      newUser.typeExpiresAt = undefined;
+    if (Date.now() > (oldData.typeExpiresAt?.toMillis() || Date.now() + 1)) {
+      newData.type = 0;
+      newData.typeExpiresAt = undefined;
     }
 
     // Update locale
-    if (this.currentLocale) newUser.locale = this.currentLocale;
+    if (oldData.locale !== locale) newData.locale = locale;
 
     // commit
-    await this.doc.update(newUser);
+    await this.updateReference(newData);
   }
 }

@@ -14,4 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import {
+  APIInteraction as Interaction,
+  APIUser as User,
+} from "discord-api-types/v9";
+
 export const getEnv = (name: string) => process.env[name] || process.exit(1);
+export const getUser = (i: Interaction) => (i.user || i.member?.user) as User;

@@ -16,9 +16,9 @@
 
 import Slash from ".";
 import os from "os";
-import { Emoji } from "../../Utils";
+import { Emoji, getUser as getRawUser } from "../../Utils";
 import { APIEmbed, APIUser } from "discord-api-types/v9";
-import { User } from "../../Database";
+import { getUser } from "../../Database";
 
 const getUptime = () => {
   let uptime = os.uptime();
@@ -40,10 +40,9 @@ const getUptime = () => {
 };
 
 Slash.register("about", false, async (interaction, respond, _) => {
-  const rawUser = (interaction.user || interaction.member?.user) as APIUser;
-  // TODO: discord-api-types doesn't yet have locale
-  const user = new User(rawUser, (interaction as any).locale);
-  user.update(); // Background job
+  const rawUser = getRawUser(interaction);
+  const dbUser = await getUser(rawUser.id);
+  dbUser.update(interaction); // Background job
 
   const embed: APIEmbed = {
     color: 0x852087,
