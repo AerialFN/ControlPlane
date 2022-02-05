@@ -37,13 +37,15 @@ class User {
     this.data = snapshot.data() as DBUser;
   }
 
-  private async updateSnapshot() {
-    this.snapshot = await this.reference.get();
+  private async updateSnapshot(snapshot?: DocumentSnapshot) {
+    if (snapshot) this.snapshot = snapshot;
+    else this.snapshot = await this.reference.get();
     this.data = this.snapshot.data() as DBUser;
   }
 
   async ensureExists(data: DBUser) {
-    if (this.snapshot.exists) return;
+    const snapshot = await this.reference.get();
+    if (snapshot.exists) return;
     await this.reference.create(data);
     await this.updateSnapshot();
   }
