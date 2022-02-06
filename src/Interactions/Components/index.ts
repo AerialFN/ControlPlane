@@ -35,10 +35,11 @@ class MessageComponentManager {
 
   async execute(int: Interaction): Promise<Response> {
     const data = int.data.custom_id.split("::");
+    const type = int.data.component_type;
     const params = data.slice(1, data.length);
     const name = data[0];
 
-    const fn = this.registeredComponents.get(name);
+    const fn = this.registeredComponents.get(`${name}::${type}`);
     if (fn) return await fn(int, params);
     return { type: 4, data: { content: "Unknown component.", flags: 64 } };
   }
