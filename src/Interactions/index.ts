@@ -20,10 +20,12 @@ import {
   APIChatInputApplicationCommandInteraction as ChatInput,
 } from "discord-api-types/v9";
 import SlashCommandManager from "./Commands";
+import ComponentManager from "./Components";
 import AutocompleteManager from "./Autocompletes";
 
 class InteractionManager {
   private slash = SlashCommandManager;
+  private component = ComponentManager;
   private complete = AutocompleteManager;
 
   async execute(interaction: Interaction): Promise<Response> {
@@ -31,6 +33,8 @@ class InteractionManager {
       return { type: 1 };
     } else if (interaction.type === 2 && interaction.data.type === 1) {
       return await this.slash.execute(interaction as ChatInput);
+    } else if (interaction.type === 3) {
+      return await this.component.execute(interaction);
     } else if (interaction.type === 4) {
       return await this.complete.execute(interaction);
     } else {
