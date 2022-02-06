@@ -16,7 +16,7 @@
 
 import { createFollowUp, editResponse } from "../../API";
 import {
-  APIApplicationCommandInteraction as Interaction,
+  APIChatInputApplicationCommandInteraction as Interaction,
   APIInteractionResponse as Response,
   APIMessage as Message,
 } from "discord-api-types/v9";

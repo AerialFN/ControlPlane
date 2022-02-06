@@ -17,7 +17,35 @@
 import {
   APIInteraction as Interaction,
   APIUser as User,
+  APIApplicationCommandInteractionDataOption as Option,
 } from "discord-api-types/v9";
+import os from "os";
 
 export const getEnv = (name: string) => process.env[name] || process.exit(1);
 export const getUser = (i: Interaction) => (i.user || i.member?.user) as User;
+export const getTypingOption = (options: Option[]) => {
+  for (let i = 0; i < options.length; i++) {
+    const option = options[i];
+    if ((option.type === 3 || option.type === 4) && option.focused) {
+      return option;
+    }
+  }
+};
+export const getUptime = () => {
+  let uptime = os.uptime();
+  let prettyUptime = "Up for ";
+  if (uptime > 60 * 60 * 24) {
+    prettyUptime += `${Math.floor(uptime / (60 * 60 * 24))} days, `;
+    uptime = uptime % (60 * 60 * 24);
+  }
+  if (uptime > 60 * 60) {
+    prettyUptime += `${Math.floor(uptime / (60 * 60))} hours, `;
+    uptime = uptime % (60 * 60);
+  }
+  if (uptime > 60) {
+    prettyUptime += `${Math.floor(uptime / 60)} minutes, `;
+    uptime = uptime % 60;
+  }
+  prettyUptime += `${Math.floor(uptime)} seconds`;
+  return prettyUptime;
+};

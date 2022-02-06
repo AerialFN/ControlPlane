@@ -17,17 +17,22 @@
 import {
   APIInteraction as Interaction,
   APIInteractionResponse as Response,
+  APIChatInputApplicationCommandInteraction as ChatInput,
 } from "discord-api-types/v9";
 import SlashCommandManager from "./Commands";
+import AutocompleteManager from "./Autocompletes";
 
 class InteractionManager {
   private slash = SlashCommandManager;
+  private complete = AutocompleteManager;
 
   async execute(interaction: Interaction): Promise<Response> {
     if (interaction.type === 1) {
       return { type: 1 };
-    } else if (interaction.type === 2) {
-      return await this.slash.execute(interaction);
+    } else if (interaction.type === 2 && interaction.data.type === 1) {
+      return await this.slash.execute(interaction as ChatInput);
+    } else if (interaction.type === 4) {
+      return await this.complete.execute(interaction);
     } else {
       return { type: 4, data: { content: "Unknown interaction.", flags: 64 } };
     }

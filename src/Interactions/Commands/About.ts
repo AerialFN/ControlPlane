@@ -16,28 +16,9 @@
 
 import Slash from ".";
 import os from "os";
-import { Emoji, getUser as getRawUser } from "../../Utils";
+import { Emoji, getUser as getRawUser, getUptime } from "../../Utils";
 import { APIEmbed, APIUser } from "discord-api-types/v9";
 import { getUser } from "../../Database";
-
-const getUptime = () => {
-  let uptime = os.uptime();
-  let prettyUptime = "Up for ";
-  if (uptime > 60 * 60 * 24) {
-    prettyUptime += `${Math.floor(uptime / (60 * 60 * 24))} days, `;
-    uptime = uptime % (60 * 60 * 24);
-  }
-  if (uptime > 60 * 60) {
-    prettyUptime += `${Math.floor(uptime / (60 * 60))} hours, `;
-    uptime = uptime % (60 * 60);
-  }
-  if (uptime > 60) {
-    prettyUptime += `${Math.floor(uptime / 60)} minutes, `;
-    uptime = uptime % 60;
-  }
-  prettyUptime += `${Math.floor(uptime)} seconds`;
-  return prettyUptime;
-};
 
 Slash.register("about", false, async (interaction, respond, _) => {
   const rawUser = getRawUser(interaction);
