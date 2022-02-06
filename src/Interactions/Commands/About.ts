@@ -15,12 +15,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Slash from ".";
-import os from "os";
 import { Emoji, getUser as getRawUser, getUptime } from "../../Utils";
-import { APIEmbed, APIUser } from "discord-api-types/v9";
+import { APIEmbed } from "discord-api-types/v9";
 import { getUser } from "../../Database";
 
-Slash.register("about", false, async (interaction, respond, _) => {
+Slash.register("about", false, async (interaction, respond) => {
   const rawUser = getRawUser(interaction);
   getUser(rawUser.id).then((user) => user.update(interaction));
 

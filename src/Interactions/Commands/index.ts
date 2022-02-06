@@ -25,11 +25,11 @@ import { readdir } from "fs/promises";
 export type EditMessage = (_: Partial<Message>) => Promise<Message | undefined>;
 export type FollowUp = (_: Message) => Promise<Message | undefined>;
 
-type Handler = (i: Interaction, e: EditMessage, c: FollowUp) => void;
-type SlashCommandMapping = { ephemeral: boolean; fn: Handler };
+type Handler = (i: Interaction, e: EditMessage, c: FollowUp) => any;
+type MapData = { ephemeral: boolean; fn: Handler };
 
 class SlashCommandManager {
-  private registeredCommands: Map<string, SlashCommandMapping> = new Map();
+  private registeredCommands: Map<string, MapData> = new Map();
 
   register(name: string, ephemeral: boolean, fn: Handler) {
     this.registeredCommands.set(name, { fn, ephemeral });
