@@ -35,7 +35,11 @@ Slash.register("about", false, async (interaction, respond) => {
       },
     ],
     footer: {
-      text: `${getUptime()} • Made with </> by andre4ik3`,
+      // It is against the terms of the license (and therefore Copyright law) to
+      // remove or modify this text. Moreover, source code must be provided to
+      // any user that asks for it, even over the network, as per the terms of
+      // the GNU Affero General Public License 3.0.
+      text: "Copyright © andre4ik3. Aerial is licensed under the GNU AGPL 3.0.",
     },
   };
   await respond({ embeds: [embed] });

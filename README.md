@@ -22,33 +22,19 @@ User data is stored in Firestore using `firebase-admin` SDK. Authentication is
 performed using GCP's already-included environment variables. Because of this,
 deployment to anywhere other than GCP with Firestore is currently impossible.
 
-## How do I deploy it?
+## Copyright (aka notice to anyone trying to copy the bot)
 
-1. Create a new [Google Cloud Platform (GCP)](https://cloud.google.com) project.
+Aerial is licensed under the AGPL 3.0 license. This means that:
 
-2. Create a new [Firebase](https://firebase.google.com) project attached to the
-   GCP project.
+- Every user has the right to download, modify, and redistribute this software.
+- This includes anyone that interfaces with it over the network. (e.g. Discord)
+- If you modify and redistribute the software, it _must_ have the same or later
+  GPL license. This means that the license (summarized in these bullet points)
+  also apply to YOUR modified version of the code. **You have to make it
+  open-source.**
+- Moreover, the copyright notice in the `/about` command **must** be preserved.
+  If the `/about` command is removed, place it somewhere else where **every**
+  user can access it.
+- NO WARRANTY is provided with this software.
 
-3. Enable Firestore for your Firebase project.
-
-4. Build the container and push it to Artifact Registry.
-
-5. Create a [Cloud Run](https://cloud.google.com/run/) deployment, it will fail
-   to start.
-
-6. Go into Cloud Run instance settings, set environments according to env
-   variable section below.
-
-7. Set the minimum amount of instances running to 1. This ensures that a server
-   is always available to handle a request within 3 seconds (after that it times
-   out).
-
-8. Redeploy and enjoy! 🎉
-
-## Environment Variables
-
-The server will exit with status code 1 if any are missing.
-
-| Name         | Explanation                   |
-| ------------ | ----------------------------- |
-| `PUBLIC_KEY` | The Discord app's public key. |
+See the `COPYING` file for more details.
