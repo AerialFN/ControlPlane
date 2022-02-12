@@ -1,4 +1,4 @@
-// "Start" Slash Command
+// Color Helper
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,16 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import Slash from ".";
-import Messaging from "../../Messaging";
-import { APIEmbed } from "discord-api-types/v9";
-import { getUser } from "../../Database";
-import { Emoji, Color, getUser as getRawUser } from "../../Utils";
-
-Slash.register("start", true, async (interaction, respond) => {
-  const rawUser = getRawUser(interaction);
-  getUser(rawUser.id).then((user) => user.update(interaction));
-
-  if (rawUser.id !== "406856161015627835")
-    return respond({ content: "Can't do that yet!" });
-});
+export class Color {
+  public static purple = 0x852087;
+}

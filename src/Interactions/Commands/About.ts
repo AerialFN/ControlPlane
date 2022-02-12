@@ -15,23 +15,33 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Slash from ".";
-import { Emoji, getUser as getRawUser } from "../../Utils";
+import Messaging from "../../Messaging";
 import { APIEmbed } from "discord-api-types/v9";
 import { getUser } from "../../Database";
+import { Emoji, Color, getUser as getRawUser } from "../../Utils";
+
+const messagingStatus = Messaging.connected
+  ? Emoji.statusDead
+  : Messaging.blocked
+    ? Emoji.statusOffline
+    : Emoji.statusOnline;
 
 Slash.register("about", false, async (interaction, respond) => {
   const rawUser = getRawUser(interaction);
   getUser(rawUser.id).then((user) => user.update(interaction));
 
   const embed: APIEmbed = {
-    color: 0x852087,
+    color: Color.purple,
     title: "About Aerial",
     description:
       "Aerial is an [open-source](https://github.com/AerialFN) Fortnite bot, allowing you to start and manage bots on-demand, via slash commands. It consists of several databases and servers all working together to make the magic happen.",
     fields: [
       {
         name: "Component Status",
-        value: `${Emoji.statusOnline} Control Plane`,
+        value: `
+        ${Emoji.statusOnline} Control Plane
+        ${messagingStatus} Messaging Service
+        `,
       },
     ],
     footer: {

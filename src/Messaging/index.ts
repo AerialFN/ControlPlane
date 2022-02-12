@@ -23,17 +23,26 @@ class MessagingManager {
   private connection?: AMQP.Connection;
   private channel?: AMQP.Channel;
 
+  blocked = false;
+  connected = false;
+
   constructor() {
     this.connect();
   }
 
   async connect() {
-    if (!this.connection) {
-      this.connection = await AMQP.connect(url);
-      this.channel = await this.connection.createChannel();
-      this.channel.assertQueue("jobs", { durable: true });
-      log.info("Connected to AMQP server and established queue.");
-    }
+    if (this.connection) await this.connection.close();
+
+    this.connection = await AMQP.connect(url);
+    this.channel = await this.connection.createChannel();
+    this.channel.assertQueue("jobs", { durable: true });
+
+    this.connection.on("error", this.connect);
+    this.connection.on("blocked", () => (this.blocked = true));
+    this.connection.on("unblocked", () => (this.blocked = false));
+
+    this.connected = true;
+    log.info("Connected to AMQP server and established queue.");
   }
 
   async push(msg: string) {

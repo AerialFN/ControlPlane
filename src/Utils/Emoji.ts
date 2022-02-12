@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-class Emoji {
+export class Emoji {
   // Status
   public static statusOnline = "<:Status_Online:936973619253346314>";
   public static statusDegraded = "<:Status_Degraded:936973596818018324>";
@@ -30,5 +30,3 @@ class Emoji {
   public static accountEpicGames = "<:Account_EpicGames:936994707924455454>";
   public static accountCreate = "<:Account_Create:936994647434227723>";
 }
-
-export { Emoji };
