@@ -17,23 +17,26 @@
 import AMQP from "amqplib";
 import { getEnv, log } from "../Utils";
 
-const hostname = getEnv("AMQP_HOSTNAME");
-const username = getEnv("AMQP_USERNAME");
-const password = getEnv("AMQP_PASSWORD");
+const url = getEnv("AMQP_ENDPOINT");
 
 class MessagingManager {
   private connection?: AMQP.Connection;
   private channel?: AMQP.Channel;
 
+  constructor() {
+    this.connect();
+  }
+
   async connect() {
-    this.connection = await AMQP.connect({ username, password, hostname });
-    this.channel = await this.connection.createChannel();
-    this.channel.assertQueue("jobs", { durable: true });
-    log.info("Connected to AMQP server and established queue.");
+    if (!this.connection) {
+      this.connection = await AMQP.connect(url);
+      this.channel = await this.connection.createChannel();
+      this.channel.assertQueue("jobs", { durable: true });
+      log.info("Connected to AMQP server and established queue.");
+    }
   }
 
   async push(msg: string) {
-    if (!this.connection) await this.connect();
     this.channel?.sendToQueue("jobs", Buffer.from(msg), { persistent: true });
     log.verbose(`Pushed ${msg} to queue.`);
   }
