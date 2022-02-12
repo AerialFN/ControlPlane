@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import AMQP from "amqplib";
-import { getEnv, log } from "../Utils";
+import { getEnv, log, sleep } from "../Utils";
 
 const url = getEnv("AMQP_ENDPOINT");
 
@@ -31,15 +31,30 @@ class MessagingManager {
   }
 
   async connect() {
+    while (!this.connected) {
+      try {
+        await this.tryConnect();
+      } catch (e) {
+        log.error(`Error while connecting to AQMP: ${e}`);
+        log.error("Retrying in 10 seconds");
+      }
+      await sleep(10000);
+    }
+  }
+
+  private async tryConnect() {
     if (this.connection) await this.connection.close();
 
     this.connection = await AMQP.connect(url);
     this.channel = await this.connection.createChannel();
     this.channel.assertQueue("jobs", { durable: true });
 
-    this.connection.on("error", this.connect);
     this.connection.on("blocked", () => (this.blocked = true));
     this.connection.on("unblocked", () => (this.blocked = false));
+    this.connection.on("error", () => {
+      this.connected = false;
+      this.connect();
+    });
 
     this.connected = true;
     log.info("Connected to AMQP server and established queue.");

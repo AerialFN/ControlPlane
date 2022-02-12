@@ -21,6 +21,7 @@ import {
 } from "discord-api-types/v9";
 import { log } from "./Logging";
 
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export const getUser = (i: Interaction) => (i.user || i.member?.user) as User;
 export const getEnv = (name: string): string => {
   if (process.env[name]) return process.env[name] as string;
