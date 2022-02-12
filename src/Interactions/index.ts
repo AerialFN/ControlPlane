@@ -22,13 +22,17 @@ import {
 import SlashCommandManager from "./Commands";
 import ComponentManager from "./Components";
 import AutocompleteManager from "./Autocompletes";
+import ModalManager from "./Modals";
+import { log } from "../Utils";
 
 class InteractionManager {
   private slash = SlashCommandManager;
   private component = ComponentManager;
   private complete = AutocompleteManager;
+  private modal = ModalManager;
 
   async execute(interaction: Interaction): Promise<Response> {
+    log.verbose(`Received interaction of type ${interaction.type}`);
     if (interaction.type === 1) {
       return { type: 1 };
     } else if (interaction.type === 2 && interaction.data.type === 1) {
@@ -37,7 +41,11 @@ class InteractionManager {
       return await this.component.execute(interaction);
     } else if (interaction.type === 4) {
       return await this.complete.execute(interaction);
+      // TODO: discord-api-types bruh moment
+      // } else if (interaction.type === 5) {
+      // return await this.modal.execute(interaction);
     } else {
+      log.warn(`Unknown interaction type ${interaction.type}.`);
       return { type: 4, data: { content: "Unknown interaction.", flags: 64 } };
     }
   }

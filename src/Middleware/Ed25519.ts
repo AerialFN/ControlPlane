@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Request, Response, NextFunction } from "express";
 import NaCl from "tweetnacl";
-import { getEnv } from "../Utils";
+import { Request, Response, NextFunction } from "express";
+import { getEnv, log } from "../Utils";
 
 const PUBLIC_KEY = getEnv("PUBLIC_KEY");
 
@@ -37,7 +37,14 @@ export const Ed25519 = (req: Request, res: Response, next: NextFunction) => {
     Buffer.from(PUBLIC_KEY, "hex")
   );
 
-  if (!isVerified) return res.status(401).end("Unauthorized");
+  if (!isVerified) {
+    res.status(401).end("Unauthorized");
+    const ip = req.header("CF-Connecting-IP") || req.header("X-Forwarded-For");
+    log.warn(`Denied unauthorized request from ${ip || req.ip}`);
+    log.warn(`User-Agent: ${req.header("User-Agent")}`);
+    return;
+  }
 
+  log.verbose("Successfully verified request");
   next(); // all is good, continue
 };

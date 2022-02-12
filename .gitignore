@@ -1,2 +1,9 @@
 dist
 node_modules
+
+.vscode
+.nova
+.DS_Store
+
+controlplane.log
+

@@ -20,7 +20,7 @@ import {
   APIApplicationCommandOptionChoice as Choice,
 } from "discord-api-types/v9";
 import { readdir } from "fs/promises";
-import { getTypingOption } from "../../Utils";
+import { getTypingOption, log } from "../../Utils";
 
 type Handler = (i: Interaction) => Promise<Choice<string>[]> | Choice<string>[];
 const noCompletions: Choice[] = [
@@ -48,6 +48,7 @@ class AutocompleteManager {
     const name = `${int.data.name}::${focusedOption.name}`;
     const fn = this.registeredCompletes.get(name);
     if (fn) return { type: 8, data: { choices: await fn(int) } };
+    log.warn(`Unknown autocomplete interaction: ${name}.`);
     return { type: 8, data: { choices: noCompletions } };
   }
 }

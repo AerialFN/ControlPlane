@@ -1,4 +1,4 @@
-// Message Component Manager
+// Modal Manager
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// TODO: everything
+// This is a copy paste of component manager
+// ignore everything below
+
 import {
   APIMessageComponentInteraction as Interaction,
   APIInteractionResponse as Response, // tbd MessageComponentInteractionResponse
@@ -27,7 +31,7 @@ enum Component {
   "SELECT_MENU" = 3,
 }
 
-class MessageComponentManager {
+class ModalManager {
   private registeredComponents: Map<string, Handler> = new Map();
 
   register(name: string, type: Component, fn: Handler) {
@@ -42,12 +46,12 @@ class MessageComponentManager {
 
     const fn = this.registeredComponents.get(`${name}::${type}`);
     if (fn) return await fn(int, params);
-    log.warn(`Unknown component interaction: ${name}.`);
+    log.warn(`Unknown modal interaction: ${name}.`);
     return { type: 4, data: { content: "Unknown component.", flags: 64 } };
   }
 }
 
-export default new MessageComponentManager();
+export default new ModalManager();
 
 readdir(__dirname).then((files) =>
   files.forEach((file) => require(`./${file}`))

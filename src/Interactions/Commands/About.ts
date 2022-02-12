@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import Slash from ".";
-import { Emoji, getUser as getRawUser, getUptime } from "../../Utils";
+import { Emoji, getUser as getRawUser } from "../../Utils";
 import { APIEmbed } from "discord-api-types/v9";
 import { getUser } from "../../Database";
 

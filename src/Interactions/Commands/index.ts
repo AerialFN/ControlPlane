@@ -20,12 +20,13 @@ import {
   APIInteractionResponse as Response,
   APIMessage as Message,
 } from "discord-api-types/v9";
+import { log } from "../../Utils";
 import { readdir } from "fs/promises";
 
 export type EditMessage = (_: Partial<Message>) => Promise<Message | undefined>;
 export type FollowUp = (_: Message) => Promise<Message | undefined>;
 
-type Handler = (i: Interaction, e: EditMessage, c: FollowUp) => any;
+type Handler = (i: Interaction, e: EditMessage, c: FollowUp) => unknown;
 type MapData = { ephemeral: boolean; fn: Handler };
 
 class SlashCommandManager {
@@ -49,6 +50,7 @@ class SlashCommandManager {
       registered.fn(int, this.getResponse(int), this.getFollowUp(int));
       return { type: 5, data: { flags: registered.ephemeral ? 64 : 0 } };
     }
+    log.warn(`Unknown command interaction: ${int.data.name}.`);
     return { type: 4, data: { content: "Unknown command.", flags: 64 } };
   }
 }

@@ -18,15 +18,19 @@ import Express from "express";
 import InteractionManager from "./Interactions";
 import { RawBody, Ed25519, JSONBody } from "./Middleware";
 import { APIInteraction as Interaction } from "discord-api-types/payloads/v9";
-import { LoggingManager } from "./Utils";
+import { log } from "./Utils";
 
-const log = new LoggingManager();
 const app = Express();
 app.use(RawBody, Ed25519, JSONBody);
 
-app.post("/", async (request, response) => {
-  const interaction: Interaction = request.body;
-  return response.json(await InteractionManager.execute(interaction)).send();
+app.post("/", async (req, res) => {
+  const ip = req.header("CF-Connecting-IP") || req.header("X-Forwarded-For");
+  log.http(`POST / from ${ip || req.ip} (${req.header("User-Agent")})`);
+
+  const interaction: Interaction = req.body;
+  return res.json(await InteractionManager.execute(interaction)).send();
 });
 
-app.listen(process.env.PORT || 5000);
+app.listen(process.env.PORT || 5000, () => {
+  log.info(`Started up. Listening on port ${process.env.PORT || 5000}.`);
+});

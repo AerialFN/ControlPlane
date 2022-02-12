@@ -1,4 +1,4 @@
-// Miscellaneous Helpers
+// Messaging Manager
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,24 +14,27 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import {
-  APIInteraction as Interaction,
-  APIUser as User,
-  APIApplicationCommandInteractionDataOption as Option,
-} from "discord-api-types/v9";
-import { log } from "./Logging";
+import AMQP from "amqplib";
+import { getEnv, log } from "../Utils";
 
-export const getUser = (i: Interaction) => (i.user || i.member?.user) as User;
-export const getEnv = (name: string): string => {
-  if (process.env[name]) return process.env[name] as string;
-  log.error(`Environment variable ${name} not found!`);
-  process.exit(1);
-};
-export const getTypingOption = (options: Option[]) => {
-  for (let i = 0; i < options.length; i++) {
-    const option = options[i];
-    if ((option.type === 3 || option.type === 4) && option.focused) {
-      return option;
-    }
+const AMQP_URL = getEnv("AMQP_URL");
+
+class MessagingManager {
+  private connection?: AMQP.Connection;
+  private channel?: AMQP.Channel;
+
+  async connect() {
+    this.connection = await AMQP.connect(AMQP_URL);
+    this.channel = await this.connection.createChannel();
+    this.channel.assertQueue("jobs", { durable: true });
+    log.info("Connected to AMQP server and established queue.");
   }
-};
+
+  async push(msg: string) {
+    if (!this.connection) await this.connect();
+    this.channel?.sendToQueue("jobs", Buffer.from(msg));
+    log.verbose(`Pushed ${msg} to queue.`);
+  }
+}
+
+export default new MessagingManager();

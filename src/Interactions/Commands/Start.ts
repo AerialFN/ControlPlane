@@ -1,4 +1,4 @@
-// Logging Manager
+// "Start" Slash Command
 // Copyright (C) 2022  andre4ik3
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,22 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import Winston from "winston";
+import Slash from ".";
+import Messaging from "../../Messaging";
+import { getUser } from "../../Utils";
 
-export const log = Winston.createLogger({
-  level: "silly",
-  transports: [
-    new Winston.transports.Console({
-      format: Winston.format.cli(),
-    }),
-    new Winston.transports.File({
-      filename: "controlplane.log",
-      format: Winston.format.timestamp(),
-    }),
-  ],
-  exitOnError: false,
-  handleExceptions: true,
-  handleRejections: true,
+Slash.register("start", true, async (interaction, respond) => {
+  const user = getUser(interaction);
+  if (user.id !== "406856161015627835")
+    return respond({ content: "Can't do that yet!" });
+  await Messaging.push("Bruh");
 });
-
-process.on("uncaughtException", (e) => log.error(e.message));
