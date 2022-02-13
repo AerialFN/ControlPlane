@@ -20,14 +20,12 @@ import { APIEmbed } from "discord-api-types/v9";
 import { getUser } from "../../Database";
 import { Emoji, Color, getUser as getRawUser } from "../../Utils";
 
-const messagingBlockedStatus = Messaging.blocked
-  ? Emoji.statusOffline
-  : Emoji.statusOnline;
-const messagingStatus = Messaging.connected
-  ? messagingBlockedStatus
-  : Emoji.statusDead;
-
-if (!Messaging.connected && !Messaging.isConnecting) Messaging.connect();
+const messagingStatus = () =>
+  Messaging.connected
+    ? Messaging.blocked
+      ? Emoji.statusDegraded // AMQP online but is overloaded
+      : Emoji.statusOnline // AMQP online and working fine
+    : Emoji.statusDead; // AMQP offline/disconnected
 
 Slash.register("about", false, async (interaction, respond) => {
   const rawUser = getRawUser(interaction);
@@ -43,7 +41,7 @@ Slash.register("about", false, async (interaction, respond) => {
         name: "Component Status",
         value: `
         ${Emoji.statusOnline} Control Plane
-        ${messagingStatus} Messaging Service
+        ${messagingStatus()} Messaging Service
         `,
       },
     ],
