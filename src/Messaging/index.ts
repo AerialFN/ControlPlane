@@ -37,7 +37,7 @@ class MessagingManager {
       this.isConnecting = true;
       try {
         log.verbose("Attempting to connect to AMQP...");
-        await this.tryConnect();
+        await this.tryConnect.apply(this);
         this.isConnecting = false;
       } catch (e) {
         log.error(`Error while connecting to AQMP: ${e}`);

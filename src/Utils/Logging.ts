@@ -32,4 +32,4 @@ export const log = Winston.createLogger({
   handleRejections: true,
 });
 
-process.on("uncaughtException", (e) => log.error(e.message));
+process.on("uncaughtException", (e) => log.error(e.message, e.stack));
