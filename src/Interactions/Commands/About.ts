@@ -26,6 +26,8 @@ const messagingStatus = Messaging.connected
     : Emoji.statusOnline
   : Emoji.statusDead;
 
+if (!Messaging.connected && !Messaging.isConnecting) Messaging.connect();
+
 Slash.register("about", false, async (interaction, respond) => {
   const rawUser = getRawUser(interaction);
   getUser(rawUser.id).then((user) => user.update(interaction));

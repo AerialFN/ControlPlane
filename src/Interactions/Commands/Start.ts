@@ -23,7 +23,6 @@ import { Emoji, Color, getUser as getRawUser } from "../../Utils";
 Slash.register("start", true, async (interaction, respond) => {
   const rawUser = getRawUser(interaction);
   getUser(rawUser.id).then((user) => user.update(interaction));
-  console.log(Messaging.connected, Messaging.blocked);
   if (rawUser.id !== "406856161015627835")
     return respond({ content: "Can't do that yet!" });
 });

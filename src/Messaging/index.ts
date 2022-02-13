@@ -56,27 +56,31 @@ class MessagingManager {
     }
 
     this.connection = await AMQP.connect(url);
+
+    this.connection.on("close", this.disconnect.bind(this));
+    this.connection.on("error", this.disconnect.bind(this));
+    this.connection.on("blocked", (() => (this.blocked = true)).bind(this));
+    this.connection.on("unblocked", (() => (this.blocked = false)).bind(this));
+
     this.channel = await this.connection.createChannel();
     this.channel.assertQueue("jobs", { durable: true });
 
-    this.connection.on("blocked", (() => (this.blocked = true)).bind(this));
-    this.connection.on("unblocked", (() => (this.blocked = false)).bind(this));
-    this.connection.on("error", this.disconnect.bind(this));
-    this.connection.on("close", this.disconnect.bind(this));
-    this.channel.on("error", this.disconnect.bind(this));
     this.channel.on("close", this.disconnect.bind(this));
+    this.channel.on("error", this.disconnect.bind(this));
 
     this.connected = true;
     log.info("Connected to AMQP server and established queue.");
   }
 
   private async disconnect(e?: Error) {
-    log.warn(`Lost connection to AMQP - ${e?.message || "unknown"} error.`);
     this.connected = false;
+    log.warn(`Lost connection to AMQP - ${e?.message || "unknown"} error.`);
+    await sleep(3000);
     await this.connect();
   }
 
   async push(msg: string) {
+    if (!this.connected) await this.connect();
     this.channel?.sendToQueue("jobs", Buffer.from(msg), { persistent: true });
     log.verbose(`Pushed ${msg} to queue.`);
   }
