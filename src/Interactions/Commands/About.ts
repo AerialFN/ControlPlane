@@ -20,10 +20,11 @@ import { APIEmbed } from "discord-api-types/v9";
 import { getUser } from "../../Database";
 import { Emoji, Color, getUser as getRawUser } from "../../Utils";
 
+const messagingBlockedStatus = Messaging.blocked
+  ? Emoji.statusOffline
+  : Emoji.statusOnline;
 const messagingStatus = Messaging.connected
-  ? Messaging.blocked
-    ? Emoji.statusOffline
-    : Emoji.statusOnline
+  ? messagingBlockedStatus
   : Emoji.statusDead;
 
 if (!Messaging.connected && !Messaging.isConnecting) Messaging.connect();
