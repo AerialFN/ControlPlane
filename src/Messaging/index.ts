@@ -25,15 +25,20 @@ class MessagingManager {
 
   blocked = false;
   connected = false;
+  isConnecting = false;
 
   constructor() {
     this.connect();
   }
 
   async connect() {
+    if (this.isConnecting) return;
     while (!this.connected) {
+      this.isConnecting = true;
       try {
+        log.verbose("Attempting to connect to AMQP...");
         await this.tryConnect();
+        this.isConnecting = false;
       } catch (e) {
         log.error(`Error while connecting to AQMP: ${e}`);
         log.error("Retrying in 10 seconds");
@@ -43,21 +48,32 @@ class MessagingManager {
   }
 
   private async tryConnect() {
-    if (this.connection) await this.connection.close();
+    try {
+      if (this.channel) await this.channel.close();
+      if (this.connection) await this.connection.close();
+    } catch (e) {
+      log.warn(`Error whilst cleaning up connection: ${e}. Continuing.`);
+    }
 
     this.connection = await AMQP.connect(url);
     this.channel = await this.connection.createChannel();
     this.channel.assertQueue("jobs", { durable: true });
 
-    this.connection.on("blocked", () => (this.blocked = true));
-    this.connection.on("unblocked", () => (this.blocked = false));
-    this.connection.on("error", () => {
-      this.connected = false;
-      this.connect();
-    });
+    this.connection.on("blocked", (() => (this.blocked = true)).bind(this));
+    this.connection.on("unblocked", (() => (this.blocked = false)).bind(this));
+    this.connection.on("error", this.disconnect.bind(this));
+    this.connection.on("close", this.disconnect.bind(this));
+    this.channel.on("error", this.disconnect.bind(this));
+    this.channel.on("close", this.disconnect.bind(this));
 
     this.connected = true;
     log.info("Connected to AMQP server and established queue.");
+  }
+
+  private async disconnect(e?: Error) {
+    log.warn(`Lost connection to AMQP - ${e?.message || "unknown"} error.`);
+    this.connected = false;
+    await this.connect();
   }
 
   async push(msg: string) {
