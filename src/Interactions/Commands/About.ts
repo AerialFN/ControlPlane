@@ -21,10 +21,10 @@ import { getUser } from "../../Database";
 import { Emoji, Color, getUser as getRawUser } from "../../Utils";
 
 const messagingStatus = Messaging.connected
-  ? Emoji.statusDead
-  : Messaging.blocked
+  ? Messaging.blocked
     ? Emoji.statusOffline
-    : Emoji.statusOnline;
+    : Emoji.statusOnline
+  : Emoji.statusDead;
 
 Slash.register("about", false, async (interaction, respond) => {
   const rawUser = getRawUser(interaction);
