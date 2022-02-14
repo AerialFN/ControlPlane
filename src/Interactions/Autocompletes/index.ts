@@ -38,7 +38,8 @@ class AutocompleteManager {
   }
 
   async execute(int: Interaction): Promise<Response> {
-    const focusedOption = getTypingOption(int.data.options);
+    // TODO: PR discord-api-types and fix this
+    const focusedOption = getTypingOption(int.data.options || []);
     if (!focusedOption) return { type: 8, data: { choices: noCompletions } };
 
     const name = `${int.data.name}::${focusedOption.name}`;
