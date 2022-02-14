@@ -17,7 +17,7 @@
 import Axios from "axios";
 
 const instance = Axios.create({
-  baseURL: "https://discord.com/api/v9",
+  baseURL: "https://discord.com/api/v10",
   headers: { "User-Agent": "Aerial/1.0" },
 });
 

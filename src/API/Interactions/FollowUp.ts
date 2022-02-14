@@ -21,7 +21,7 @@ const BASE = "/webhooks/718924404876378112/";
 
 // Create Follow-Up Message
 export async function createFollowUp(msg: Message, token: string) {
-  const request = await API.post(`${BASE}/${token}`);
+  const request = await API.post(`${BASE}/${token}`, msg);
   if (request.status === 200 && request.data) return request.data as Message;
 }
 
