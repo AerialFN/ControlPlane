@@ -41,9 +41,8 @@ class InteractionManager {
       return await this.component.execute(interaction);
     } else if (interaction.type === 4) {
       return await this.complete.execute(interaction);
-      // TODO: discord-api-types bruh moment
-      // } else if (interaction.type === 5) {
-      // return await this.modal.execute(interaction);
+    } else if (interaction.type === 5) {
+      return await this.modal.execute(interaction);
     } else {
       log.warn(`Unknown interaction type ${interaction.type}.`);
       return { type: 4, data: { content: "Unknown interaction.", flags: 64 } };
