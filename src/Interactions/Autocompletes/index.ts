@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import {
-  APIInteraction as Interaction,
+  APIApplicationCommandAutocompleteInteraction as Interaction,
   APIApplicationCommandAutocompleteResponse as Response,
   APIApplicationCommandOptionChoice as Choice,
 } from "discord-api-types/v9";
@@ -38,10 +38,6 @@ class AutocompleteManager {
   }
 
   async execute(int: Interaction): Promise<Response> {
-    // TODO: Remove when discord-api-types has export for Autocomplete
-    if (int.type !== 4 || !int.data || !int.data.options)
-      return { type: 8, data: { choices: noCompletions } };
-
     const focusedOption = getTypingOption(int.data.options);
     if (!focusedOption) return { type: 8, data: { choices: noCompletions } };
 
