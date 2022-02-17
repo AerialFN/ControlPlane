@@ -18,8 +18,7 @@ import {
   APIMessageComponentInteraction as Interaction,
   APIInteractionResponse as Response, // tbd MessageComponentInteractionResponse
 } from "discord-api-types/v9";
-import { readdir } from "fs/promises";
-import { log } from "../../Utils";
+import { log, loadAll } from "../../Utils";
 
 type Handler = (i: Interaction, params: string[]) => Promise<Response>;
 enum Component {
@@ -48,7 +47,4 @@ class MessageComponentManager {
 }
 
 export default new MessageComponentManager();
-
-readdir(__dirname).then((files) =>
-  files.forEach((file) => require(`./${file}`))
-);
+loadAll(__dirname);

@@ -20,8 +20,7 @@ import {
   APIInteractionResponse as Response,
   APIMessage as Message,
 } from "discord-api-types/v9";
-import { log } from "../../Utils";
-import { readdir } from "fs/promises";
+import { log, loadAll } from "../../Utils";
 
 export type EditMessage = (_: Partial<Message>) => Promise<Message | undefined>;
 export type FollowUp = (_: Message) => Promise<Message | undefined>;
@@ -57,6 +56,4 @@ class SlashCommandManager {
 
 export default new SlashCommandManager();
 
-readdir(__dirname).then((files) =>
-  files.forEach((file) => require(`./${file}`))
-);
+loadAll(__dirname);

@@ -2,7 +2,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist",
-    "dev": "sh -c \"source .env && npm run start\""
+    "dev": "sh -c \"source .env && node --inspect dist\""
   },
   "dependencies": {
     "amqplib": "^0.8.0",

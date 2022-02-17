@@ -20,9 +20,19 @@ import {
   APIApplicationCommandInteractionDataOption as Option,
 } from "discord-api-types/v9";
 import { log } from "./Logging";
+import { readdir } from "fs/promises";
+import { join } from "path";
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export const getUser = (i: Interaction) => (i.user || i.member?.user) as User;
+export const loadAll = (d: string) => {
+  readdir(d).then((files) => {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.endsWith(".js")) require(join(d, file));
+    }
+  });
+};
 export const getEnv = (name: string): string => {
   if (process.env[name]) return process.env[name] as string;
   log.error(`Environment variable ${name} not found!`);

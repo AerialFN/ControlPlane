@@ -19,8 +19,7 @@ import {
   APIApplicationCommandAutocompleteResponse as Response,
   APIApplicationCommandOptionChoice as Choice,
 } from "discord-api-types/v9";
-import { readdir } from "fs/promises";
-import { getTypingOption, log } from "../../Utils";
+import { getTypingOption, log, loadAll } from "../../Utils";
 
 type Handler = (i: Interaction) => Promise<Choice<string>[]> | Choice<string>[];
 const noCompletions: Choice[] = [
@@ -51,7 +50,4 @@ class AutocompleteManager {
 }
 
 export default new AutocompleteManager();
-
-readdir(__dirname).then((files) =>
-  files.forEach((file) => require(`./${file}`))
-);
+loadAll(__dirname);

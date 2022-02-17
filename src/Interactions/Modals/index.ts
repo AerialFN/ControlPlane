@@ -18,8 +18,7 @@ import {
   APIModalSubmitInteraction as Interaction,
   APIInteractionResponse as Response,
 } from "discord-api-types/v9";
-import { readdir } from "fs/promises";
-import { log } from "../../Utils";
+import { log, loadAll } from "../../Utils";
 
 type Handler = (i: Interaction, params: string[]) => Promise<Response>;
 
@@ -45,7 +44,4 @@ class ModalManager {
 }
 
 export default new ModalManager();
-
-readdir(__dirname).then((files) =>
-  files.forEach((file) => require(`./${file}`))
-);
+loadAll(__dirname);
