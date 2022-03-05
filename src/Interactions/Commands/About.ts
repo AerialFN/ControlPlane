@@ -18,7 +18,7 @@ import Slash from ".";
 import Messaging from "../../Messaging";
 import { APIEmbed } from "discord-api-types/v9";
 import { getUser } from "../../Database";
-import { Emoji, Color, getUser as getRawUser } from "../../Utils";
+import { Emoji, Color, getUser as getRawUser, localize } from "../../Utils";
 
 const messagingStatus = () =>
   Messaging.connected
@@ -33,15 +33,14 @@ Slash.register("about", false, async (interaction, respond) => {
 
   const embed: APIEmbed = {
     color: Color.purple,
-    title: "About Aerial",
-    description:
-      "Aerial is an [open-source](https://github.com/AerialFN) Fortnite bot, allowing you to start and manage bots on-demand, via slash commands. It consists of several databases and servers all working together to make the magic happen.",
+    title: localize("about_title", interaction.locale),
+    description: localize("about_description", interaction.locale),
     fields: [
       {
-        name: "Component Status",
+        name: localize("about_status", interaction.locale),
         value: `
-        ${Emoji.statusOnline} Control Plane
-        ${messagingStatus()} Messaging Service
+        ${Emoji.statusOnline} ${localize("acp", interaction.locale)}
+        ${messagingStatus()} ${localize("messaging", interaction.locale)}
         `,
       },
     ],

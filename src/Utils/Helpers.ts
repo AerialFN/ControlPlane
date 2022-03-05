@@ -25,11 +25,11 @@ import { join } from "path";
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export const getUser = (i: Interaction) => (i.user || i.member?.user) as User;
-export const loadAll = (d: string) => {
+export const loadAll = (d: string, e = ".js") => {
   readdir(d).then((files) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (file.endsWith(".js")) require(join(d, file));
+      if (file.endsWith(e)) require(join(d, file));
     }
   });
 };

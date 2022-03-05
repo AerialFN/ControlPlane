@@ -1,0 +1,7 @@
+{
+  "about_title": "About Aerial",
+  "about_description": "Aerial is an [open-source](https://github.com/AerialFN) bot that allows you to start and manage in-game bots on-demand, via slash commands. It consists of several databases and servers all working together to make the magic happen.",
+  "about_status": "Component Status:",
+  "acp": "Control Plane",
+  "messaging": "Messaging Service"
+}
