@@ -14,46 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { createFollowUp, editResponse } from "../../API";
-import {
-  APIChatInputApplicationCommandInteraction as Interaction,
-  APIInteractionResponse as Response,
-  APIMessage as Message,
-} from "discord-api-types/v9";
-import { log, loadAll } from "../../Utils";
-
-export type EditMessage = (_: Partial<Message>) => Promise<Message | undefined>;
-export type FollowUp = (_: Message) => Promise<Message | undefined>;
-
-type Handler = (i: Interaction, e: EditMessage, c: FollowUp) => unknown;
-type MapData = { ephemeral: boolean; fn: Handler };
-
-class SlashCommandManager {
-  private registeredCommands: Map<string, MapData> = new Map();
-
-  register(name: string, ephemeral: boolean, fn: Handler) {
-    this.registeredCommands.set(name, { fn, ephemeral });
-  }
-
-  private getResponse(int: Interaction) {
-    return (msg: Partial<Message>) => editResponse(msg, int.token);
-  }
-
-  private getFollowUp(int: Interaction) {
-    return (msg: Message) => createFollowUp(msg, int.token);
-  }
-
-  async execute(int: Interaction): Promise<Response> {
-    const registered = this.registeredCommands.get(int.data.name);
-    if (registered) {
-      registered.fn(int, this.getResponse(int), this.getFollowUp(int));
-      return { type: 5, data: { flags: registered.ephemeral ? 64 : 0 } };
-    }
-    log.warn(`Unknown command interaction: ${int.data.name}.`);
-    return { type: 4, data: { content: "Unknown command.", flags: 64 } };
-  }
-}
-
-export default new SlashCommandManager();
+import { loadAll } from "../../Utils";
 
 loadAll(__dirname);

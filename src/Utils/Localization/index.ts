@@ -14,16 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { APIApplicationCommandInteraction } from "discord-api-types/v10";
 import en from "./en.json";
 import ru from "./ru.json";
 
 const locales = { "en-US": en, ru };
-type APILocale = APIApplicationCommandInteraction["locale"];
 type Locale = keyof typeof locales;
 type Key = keyof typeof en;
 
-export const localize = (k: Key, l: APILocale) => {
+export const localize = (k: Key, l: string) => {
   if (!(l in locales)) l = "en-US";
   return locales[l as Locale][k];
 };

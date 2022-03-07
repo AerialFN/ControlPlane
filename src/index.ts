@@ -14,22 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import Express from "express";
-import InteractionManager from "./Interactions";
-import { RawBody, Ed25519, JSONBody } from "./Middleware";
-import { APIInteraction as Interaction } from "discord-api-types/payloads/v9";
+import { app } from "./Interactions";
 import { log } from "./Utils";
-
-const app = Express();
-app.use(RawBody, Ed25519, JSONBody);
-
-app.post("/", async (req, res) => {
-  const ip = req.header("CF-Connecting-IP") || req.header("X-Forwarded-For");
-  log.http(`POST / from ${ip || req.ip} (${req.header("User-Agent")})`);
-
-  const interaction: Interaction = req.body;
-  return res.json(await InteractionManager.execute(interaction)).send();
-});
 
 app.listen(process.env.PORT || 5000, () => {
   log.info(`Started up. Listening on port ${process.env.PORT || 5000}.`);

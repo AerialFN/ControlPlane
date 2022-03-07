@@ -14,40 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import {
-  APIInteraction as Interaction,
-  APIInteractionResponse as Response,
-  APIChatInputApplicationCommandInteraction as ChatInput,
-} from "discord-api-types/v9";
-import SlashCommandManager from "./Commands";
-import ComponentManager from "./Components";
-import AutocompleteManager from "./Autocompletes";
-import ModalManager from "./Modals";
-import { log } from "../Utils";
+import Express from "express";
+import { ExpressServer } from "httpcord";
+import { getEnv } from "../Utils";
 
-class InteractionManager {
-  private slash = SlashCommandManager;
-  private component = ComponentManager;
-  private complete = AutocompleteManager;
-  private modal = ModalManager;
+// Interactions
+import "./Commands";
+// import "./Autocompletes";
+// import "./Components";
+// import "./Modals"
 
-  async execute(interaction: Interaction): Promise<Response> {
-    log.verbose(`Received interaction of type ${interaction.type}`);
-    if (interaction.type === 1) {
-      return { type: 1 };
-    } else if (interaction.type === 2 && interaction.data.type === 1) {
-      return await this.slash.execute(interaction as ChatInput);
-    } else if (interaction.type === 3) {
-      return await this.component.execute(interaction);
-    } else if (interaction.type === 4) {
-      return await this.complete.execute(interaction);
-    } else if (interaction.type === 5) {
-      return await this.modal.execute(interaction);
-    } else {
-      log.warn(`Unknown interaction type ${interaction.type}.`);
-      return { type: 4, data: { content: "Unknown interaction.", flags: 64 } };
-    }
-  }
-}
+export const app = Express();
+const publicKey = getEnv("PUBLIC_KEY");
 
-export default new InteractionManager();
+export default new ExpressServer({ app, publicKey });

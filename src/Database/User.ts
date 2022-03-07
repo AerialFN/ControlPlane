@@ -16,7 +16,7 @@
 
 import Firestore from ".";
 import { User as DBUser } from "./Types";
-import { APIInteraction } from "discord-api-types/v9";
+import { Interaction } from "httpcord";
 import { DocumentReference, DocumentSnapshot } from "firebase-admin/firestore";
 import { getUser as getRawUser } from "../Utils";
 
@@ -55,9 +55,11 @@ class User {
     await this.updateSnapshot();
   }
 
-  async update(interaction: APIInteraction) {
+  async update(interaction: Interaction) {
+    if (!interaction.isApplicationCommand()) return; // TODO: change to be more generic
+
     const user = getRawUser(interaction);
-    const locale: string = (interaction as any).locale; // TODO: cleanup when possible
+    const locale = interaction.locale; // TODO: cleanup when possible
     await this.ensureExists({ type: 0, id: user.id, locale });
 
     const oldData = this.data as DBUser;

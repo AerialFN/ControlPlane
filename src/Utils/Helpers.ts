@@ -14,11 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import {
-  APIInteraction as Interaction,
-  APIUser as User,
-  APIApplicationCommandInteractionDataOption as Option,
-} from "discord-api-types/v9";
+import { APIApplicationCommandInteractionDataOption as Option } from "discord-api-types/v9";
+import { Interaction, User } from "httpcord";
 import { log } from "./Logging";
 import { readdir } from "fs/promises";
 import { join } from "path";
