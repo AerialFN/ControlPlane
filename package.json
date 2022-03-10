@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "amqplib": "^0.8.0",
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "express": "^4.17.3",
     "firebase-admin": "^10.0.2",
     "httpcord": "^0.0.0-be48038",
