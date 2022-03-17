@@ -18,11 +18,14 @@ import interactions from "..";
 import { getUser } from "../../Database";
 import { getUser as getRawUser } from "../../Utils";
 
-interactions.slash.register(
-  { name: "start", description: "Create a bot" },
-  async (interaction) => {
-    const rawUser = getRawUser(interaction);
-    getUser(rawUser.id).then((user) => user.update(interaction));
-    await interaction.respond("Not yet!");
-  }
-);
+// The moment this is registered all hell will be set loose so to avoid burning
+// servers it is currently commented out
+
+// interactions.slash.register(
+//   { name: "start", description: "Create a bot" },
+//   async (interaction) => {
+//     const rawUser = getRawUser(interaction);
+//     getUser(rawUser.id).then((user) => user.update(interaction));
+//     await interaction.respond("Not yet!");
+//   }
+// );

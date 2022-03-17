@@ -26,5 +26,6 @@ import "./Commands";
 
 export const app = Express();
 const publicKey = getEnv("PUBLIC_KEY");
+const token = getEnv("TOKEN");
 
-export default new ExpressServer({ app, publicKey });
+export default new ExpressServer({ app, publicKey, token });
