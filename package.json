@@ -9,7 +9,7 @@
     "axios": "^0.26.1",
     "express": "^4.17.3",
     "firebase-admin": "^10.0.2",
-    "httpcord": "^0.0.0-466788b",
+    "httpcord": "^0.0.0-6320097",
     "ioredis": "^4.28.5",
     "tweetnacl": "^1.0.3",
     "winston": "^3.6.0"

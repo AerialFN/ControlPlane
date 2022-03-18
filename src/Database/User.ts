@@ -51,16 +51,15 @@ class User {
   }
 
   private async updateReference(data: Partial<DBUser>) {
-    await this.reference.update(data);
+    if (data) await this.reference.update(data);
     await this.updateSnapshot();
   }
 
-  async update(interaction: Interaction) {
-    if (!interaction.isApplicationCommand()) return; // TODO: change to be more generic
+  async update(i: Interaction) {
+    if (!i.isApplicationCommand()) return; // TODO: change to be more generic
 
-    const user = getRawUser(interaction);
-    const locale = interaction.locale; // TODO: cleanup when possible
-    await this.ensureExists({ type: 0, id: user.id, locale });
+    const user = getRawUser(i);
+    await this.ensureExists({ type: 0, id: user.id, locale: i.locale });
 
     const oldData = this.data as DBUser;
     const newData: Partial<DBUser> = {};
@@ -72,7 +71,7 @@ class User {
     }
 
     // Update locale
-    if (oldData.locale !== locale) newData.locale = locale;
+    if (oldData.locale !== i.locale) newData.locale = i.locale;
 
     // commit
     await this.updateReference(newData);
